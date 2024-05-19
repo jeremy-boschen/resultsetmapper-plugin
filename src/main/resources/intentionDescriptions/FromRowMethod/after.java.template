@@ -1,0 +1,9 @@
+class X {
+    int columnA;
+
+    public static X fromRow(ResultSetWrapper rsw) throws SQLException {
+        X e = new X();
+        e.columnA = rsw.getInt("columna");
+        return e;
+    }
+}

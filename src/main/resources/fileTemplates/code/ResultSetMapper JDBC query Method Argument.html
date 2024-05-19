@@ -1,0 +1,161 @@
+<html>
+<body>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+        <td colspan="3">
+            <font face="verdana" size="-1">
+                This template is provided by the ResultSetMapper plugin. It is used each time a <code>fromRow</code>
+                action is executed.
+            </font>
+        </td>
+    </tr>
+</table>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
+    <tr>
+        <td colspan="3"><font face="verdana" size="-1">List of custom variables</font></td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <nobr><font face="verdana" size="-2"><strong>${packageName}</strong></font></nobr>
+        </td>
+        <td width="10">&nbsp;</td>
+        <td width="100%" valign="top"><font face="verdana" size="-1">Target package name</font></td>
+    </tr>
+
+    <tr>
+        <td valign="top">
+            <nobr><font face="verdana" size="-2"><strong>${generatorName}</strong></font></nobr>
+        </td>
+        <td width="10">&nbsp;</td>
+        <td width="100%" valign="top"><font face="verdana" size="-1">Name of the code generator</font></td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <nobr><font face="verdana" size="-2"><strong>${j2eNamespace}</strong></font></nobr>
+        </td>
+        <td width="10">&nbsp;</td>
+        <td width="100%" valign="top"><font face="verdana" size="-1">Project J2EE namespace: javax or jakarta</font></td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <nobr><font face="verdana" size="-2"><strong>${class}</strong></font></nobr>
+        </td>
+        <td width="10">&nbsp;</td>
+        <td width="100%" valign="top"><font face="verdana" size="-1">PsiClass target</font></td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <nobr><font face="verdana" size="-2"><strong>${className}</strong></font></nobr>
+        </td>
+        <td width="10">&nbsp;</td>
+        <td width="100%" valign="top"><font face="verdana" size="-1">Simple name of the class target</font></td>
+    </tr>
+    <tr>
+        <td valign="top">
+            <nobr><font face="verdana" size="-2"><strong>${fields}</strong></font></nobr>
+        </td>
+        <td width="10">&nbsp;</td>
+        <td width="100%" valign="top">
+            <font face="verdana" size="-1">List of available class fields</font>
+            <br/>
+            <table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
+                <tr>
+                    <td colspan="3"><font face="verdana" size="-1">List of field variables</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${isValid}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">true if field can be mapped</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${isArray}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">true if field is an array type</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${isList}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">true if field is a java.util.List</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${isSet}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">true if field is a java.util.Set</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${isCollection}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">true if field is a java.util.Collection</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${isInitialized}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">true if field has an initializer</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${field}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">PsiField</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${type}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">PsiField.type</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${name}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">PsiField.name</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${componentType}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">PsiType of array component</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${collectionType}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">PsiType of list, set or collection type parameter</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${columnType}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">Mapped SQL column type name</font></td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <nobr><font face="verdana" size="-2"><strong>${columnName}</strong></font></nobr>
+                    </td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100%" valign="top"><font face="verdana" size="-1">Expected SQL column name</font></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
