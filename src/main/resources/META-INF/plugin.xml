@@ -1,18 +1,53 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.jeremyboschen.resultsetmapperplugin</id>
-    <name>resultsetmapper-plugin</name>
-    <vendor>jeremy-boschen</vendor>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.jb.rsm.plugin</id>
 
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>ResultSet Mapper Tools</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="jeremy.boschen@gmail.com" url="https://github.com/jeremy-boschen">Jeremy Boschen</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+        Intention action that generates a ResultSetExtractor from a DTO/POJO class.
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
-
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.jeremyboschen.resultsetmapperplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-    </extensions>
+        <projectConfigurable
+                parentId="tools"
+                id="preferences.tools.ResultSetMapperPlugin"
+                instance="com.jb.rsm.settings.ResultSetMapperSettingsUIConfigurable"
+                displayName="ResultSet Mapper"/>
 
-    <applicationListeners>
-        <listener class="com.github.jeremyboschen.resultsetmapperplugin.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
+        <intentionAction>
+            <language>JAVA</language>
+            <className>com.jb.rsm.intentions.ResultSetMapper</className>
+            <category>JDBC intentions</category>
+        </intentionAction>
+
+        <intentionAction>
+            <language>JAVA</language>
+            <className>com.jb.rsm.intentions.FromRowMethod</className>
+            <category>JDBC intentions</category>
+        </intentionAction>
+
+        <fileTemplateGroup implementation="com.jb.rsm.intentions.codegen.ResultSetMapperTemplateGroup"/>
+
+        <notificationGroup id="ResultSetMapper Notification Group"
+                           displayType="BALLOON" />
+
+    </extensions>
 </idea-plugin>
