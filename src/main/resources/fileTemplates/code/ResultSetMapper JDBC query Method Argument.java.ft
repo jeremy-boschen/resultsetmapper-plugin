@@ -1,0 +1,1 @@
+${packageName}.${mapper}.using(${className}::fromRow, ${className}.class)

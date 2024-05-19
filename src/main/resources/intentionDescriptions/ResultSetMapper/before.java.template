@@ -1,0 +1,20 @@
+class X {
+    public List<User> getUsers() {
+        return jdbcTemplate.query("SELECT * FROM users WHERE role='user'",
+                (ResultSet rs) -> {
+                    List<User> users = new ArrayList<>();
+                    while (rs.next()) {
+                        User user = new User();
+                        user.setId(rs.getInt("id"));
+                        user.setName(rs.getString("name"));
+                        users.add(user);
+                    }
+                    return users;
+                });
+    }
+
+    public List<Admin> getAdmins() {
+        return jdbcTemplate.query("SELECT * FROM users WHERE role='admin'",
+            new BeanPropertyRowMapper(Admin.class));
+    }
+}

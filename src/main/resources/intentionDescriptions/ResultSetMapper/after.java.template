@@ -1,0 +1,11 @@
+class X {
+    public List<User> getUsers() {
+        return jdbcTemplate.query("SELECT * FROM users WHERE role='user'",
+            ResultSetMapper.using(User::fromRow, User.class));
+    }
+
+    public List<Admin> getAdmins() {
+        return jdbcTemplate.query("SELECT * FROM users WHERE role='admin'",
+            ResultSetMapper.using(Admin::fromRow, Admin.class));
+    }
+}

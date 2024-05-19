@@ -1,0 +1,21 @@
+@${j2eNamespace}.annotation.Generated("$generatorName")
+public static $className fromRow(${packageName}.ResultSetWrapper rsw) throws java.sql.SQLException {
+    $className e = new ${className}();
+#foreach ($field in $fields)
+#if($field.isValid)##
+    e.${field.name} = rsw.get${field.columnType}("${field.columnName}"##
+#if($field.isArray)##
+, ${field.type.presentableText}.class##
+#elseif ($field.isList || $field.isSet || $field.isCollection)##
+, ${field.collectionType.presentableText}.class##
+#end
+#if($field.isInitialized || $field.isPrimitive)##
+, e.${field.name}##
+#end
+);
+#else
+    //TODO: No ResultSetWrapper mapping exists for ${field.name}:${field.type.presentableText}
+#end
+#end
+    return e;
+}
