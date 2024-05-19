@@ -1,0 +1,52 @@
+package ${packageName};
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import ${j2eNamespace}.annotation.Generated;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
+
+import ${packageName}.ResultSetWrapper.DiagnosticResultSetWrapper;
+
+@Generated("${generatorName}")
+@FunctionalInterface
+public interface FromRowMapper<T> extends RowMapper<T> {
+
+    // Helper method to simplify typing requirements when using a FromRowMapper<> in place of
+    // a RowMapper<>
+    static <R> RowMapper<R> from(FromRowMapper<R> mapper) {
+        return mapper;
+    }
+
+
+    /**
+     * Helper method to create a standard {@code RowMapper<R>} using the support classes
+     * {@link ResultSetWrapper} and {@link FromRowMapper}
+     *
+     * @param mapper Reference to an entity's fromRow() method.
+     * @param type   Entity class type. Used for diagnostic logging
+     * @return A ResultSetExtractor compatible with Spring JDBC query methods
+     * @implNote See {@link ResultSetWrapper#logUsageDiagnostics} for logging information.
+     */
+    static <R> RowMapper<R> using(FromRowMapper<R> mapper, Class<R> type) {
+        return (RowMapper<R>) (rs, rowNum) -> {
+            try (var rsw = new DiagnosticResultSetWrapper<>(rs, type)) {
+                return mapper.fromRow(rsw);
+            }
+        };
+    }
+
+    /**
+     * Maps a ResultSetWrapper (ResultSet) row to an instance of an entity.
+     */
+    @NonNull
+    T fromRow(ResultSetWrapper rsw) throws SQLException, DataAccessException;
+
+    @NonNull
+    default T mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+        return fromRow(new ResultSetWrapper(rs));
+    }
+}

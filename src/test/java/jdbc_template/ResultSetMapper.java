@@ -1,0 +1,61 @@
+package jdbc_template;
+
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.lang.NonNull;
+
+import jdbc_template.ResultSetWrapper.DiagnosticResultSetWrapper;
+
+/**
+ * Helper interface compatible with Spring JDBC's ResultSetExtractor.
+ *
+ * @param <T> Result type
+ */
+@Generated("generator_name")
+@FunctionalInterface
+public interface ResultSetMapper<T> extends ResultSetExtractor<T> {
+
+    // Helper method to simplify typing requirements when using a ResultSetMapper in place of
+    // a ResultSetExtractor
+    static <R> ResultSetExtractor<R> from(ResultSetMapper<R> mapper) {
+        return mapper;
+    }
+
+    /**
+     * Helper method to create a standard {@code ResultSetExtractor<List<R>>} using the support
+     * classes {@link ResultSetWrapper} and {@link FromRowMapper}. This is the recommended usage
+     * pattern for creating a ResultSetExtractor.
+     *
+     * @param mapper Reference to an entity's {@code fromRow()} method
+     * @param type   Entity class type. Used for diagnostic logging.
+     * @return A ResultSetExtractor compatible with Spring JDBC query methods.
+     * @implNote See {@link ResultSetWrapper#logUsageDiagnostics} for logging information.
+     */
+    static <R> ResultSetExtractor<List<R>> using(FromRowMapper<R> mapper, Class<R> type) {
+        return (rs) -> {
+            try (var rsw = new DiagnosticResultSetWrapper<>(rs, type)) {
+                var records = new ArrayList<R>();
+                while (rsw.next()) {
+                    records.add(mapper.fromRow(rsw));
+                }
+
+                return records;
+            }
+        };
+    }
+
+    @NonNull
+    T mapData(ResultSetWrapper rsw) throws SQLException, DataAccessException;
+
+    default T extractData(@NonNull ResultSet rs) throws SQLException {
+        return mapData(new ResultSetWrapper(rs));
+    }
+}

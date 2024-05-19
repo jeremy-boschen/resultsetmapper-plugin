@@ -11,6 +11,9 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+
+    // Used for testing
+    id("io.spring.dependency-management") version "1.1.5"
 }
 
 group = properties("pluginGroup").get()
@@ -21,14 +24,47 @@ repositories {
     mavenCentral()
 }
 
-// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
-dependencies {
-//    implementation(libs.annotations)
-}
-
 // Set the JVM language level used to build the project.
 kotlin {
     jvmToolchain(17)
+
+    sourceSets {
+        test {
+            // Tests use JDK17 to support the latest Spring Boot version
+            jvmToolchain(17)
+        }
+    }
+}
+
+
+// Used for testing
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:3.2.5")
+    }
+}
+
+configurations {
+    all {
+        exclude(module = "spring-boot-starter-logging")
+    }
+}
+
+
+// Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
+dependencies {
+    implementation(libs.annotations)
+
+    testImplementation(kotlin("test"))
+    // Used for testing the embedded templates
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
+    testImplementation("org.springframework:spring-jdbc")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.postgresql:postgresql")
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
@@ -55,6 +91,7 @@ koverReport {
         }
     }
 }
+
 
 tasks {
     wrapper {
@@ -102,6 +139,9 @@ tasks {
         systemProperty("jb.consents.confirmation.enabled", "false")
     }
 
+    runIde {
+    }
+
     signPlugin {
         certificateChain = environment("CERTIFICATE_CHAIN")
         privateKey = environment("PRIVATE_KEY")
@@ -116,4 +156,39 @@ tasks {
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
+
+
+    // Copies working class templates from the test module to main module's fileTemplates/j2ee directory
+    // for use as IntelliJ code templates
+    register("copyTemplates", Copy::class.java) {
+        group = "build"
+
+        val replacements = mapOf(
+            "jdbc_template" to "\${packageName}",
+            "generator_name" to "\${generatorName}",
+            "javax." to "\${j2eNamespace}.",
+            "jakarta." to "\${j2eNamespace}.",
+        )
+
+        from("src/test/java/jdbc_template")
+        into("src/main/resources/fileTemplates/j2ee")
+        include("ResultSetWrapper.java", "ResultSetMapper.java", "FromRowMapper.java")
+        filter { line ->
+            // Process replacements for the line
+            replacements.entries.fold(line) { acc, (from, to) -> acc.replace(from, to) }
+        }
+        rename {
+            "$it.ft"
+        }
+
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
+
+    test {
+        useJUnitPlatform()
+
+        systemProperty("idea.home.path", "../intellij-community")
+    }
 }
+
