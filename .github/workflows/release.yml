@@ -1,7 +1,3 @@
-# GitHub Actions Workflow created for handling the release process based on the draft release prepared with the Build workflow.
-# Running the publishPlugin task requires all following secrets to be provided: PUBLISH_TOKEN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN.
-# See https://plugins.jetbrains.com/docs/intellij/plugin-signing.html for more information.
-
 name: Release
 on:
   release:
@@ -9,15 +5,14 @@ on:
 
 jobs:
 
-  # Prepare and publish the plugin to JetBrains Marketplace repository
+  # Just updates the changelog
   release:
-    name: Publish Plugin
+    name: Release Plugin
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
-
       # Check out current repository
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -58,30 +53,6 @@ jobs:
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
           ./gradlew patchChangelog --release-note="$CHANGELOG"
-
-      # Publish the plugin to JetBrains Marketplace
-      - name: Publish Plugin
-        if: false # Manual install only
-        env:
-          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-        run: ./gradlew publishPlugin
-
-      # Download the build artifact
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        if: ${{ !env.ACT }}
-        with:
-          name: "resultsetmapper-plugin-${{ github.event.release.tag_name }}"
-          path: ./build/distributions/
-
-      # Upload artifact as a release asset
-      - name: Upload Release Asset
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./build/distributions/*
 
       # Create a pull request
       - name: Create Pull Request
