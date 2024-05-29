@@ -98,19 +98,23 @@ class GenerateFromRowMethod(
         if (type is PsiClassType) {
             val resolved = type.resolve()
             if (resolved != null) {
-                val elementType =
-                    type.parameters.firstOrNull() ?: elementFactory.createTypeFromText("java.lang.Object", null)
+                val elementType = type.parameters.firstOrNull()
+                    ?: elementFactory.createTypeFromText("java.lang.Object", null)
 
                 if (resolved.isTypeOf("java.util.List")) {
-                    return Pair("List", elementType)
+                    if (TypeMap.contains(elementType)) {
+                        return Pair("List", elementType)
+                    }
                 }
-
-                if (resolved.isTypeOf("java.util.Set")) {
-                    return Pair("Set", elementType)
+                else if (resolved.isTypeOf("java.util.Set")) {
+                    if (TypeMap.contains(elementType)) {
+                        return Pair("Set", elementType)
+                    }
                 }
-
-                if (resolved.isTypeOf("java.util.Collection")) {
-                    return Pair("Collection", elementType)
+                else if (resolved.isTypeOf("java.util.Collection")) {
+                    if (TypeMap.contains(elementType)) {
+                        return Pair("Collection", elementType)
+                    }
                 }
             }
         }
